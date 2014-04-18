@@ -9,7 +9,7 @@ public class Test {
 	public static void main(String args[]){
 		String tableName = "scores";
 		String[] familys = { "grade", "course" };
-		HBaseUtil hb=new HBaseUtil();
+		HBaseUtil hb=new HBaseUtil("myhadoop");
 		try{
 			System.out.println("------------------create table---------------------");
 			hb.createTable(tableName, familys);  

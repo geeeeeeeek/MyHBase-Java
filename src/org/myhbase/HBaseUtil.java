@@ -27,10 +27,10 @@ public class HBaseUtil {
 
 	private Configuration conf = null;
 
-	public HBaseUtil() {
+	public HBaseUtil(String hostName) {
 		conf = HBaseConfiguration.create();
-		conf.set("hbase.master", "myhadoop:60000");
-		conf.set("hbase.zookeeper.quorum", "myhadoop");
+		conf.set("hbase.master", hostName+":60000");
+		conf.set("hbase.zookeeper.quorum", hostName);
 		conf.set("hbase.zookeeper.property.clientPort", "2181");
 
 	}
@@ -87,8 +87,8 @@ public class HBaseUtil {
 		try {
 			HTable table = new HTable(conf, tableName);
 			Put put = new Put(Bytes.toBytes(rowKey));
-			put.add(family.getBytes(), qualifier.getBytes(),
-					value.getBytes());
+			put.add(Bytes.toBytes(family),Bytes.toBytes(qualifier),
+					Bytes.toBytes(value));
 			table.put(put);
 			System.out.println("insert recored " + rowKey + " to table "
 					+ tableName + " ok.");
@@ -108,8 +108,8 @@ public class HBaseUtil {
 	public void delRecord(String tableName, String rowKey,String family,String qualifier) throws IOException {
 		HTable table = new HTable(conf, tableName);
 		List<Delete> list = new ArrayList<Delete>();
-		Delete del = new Delete(rowKey.getBytes());
-		del.deleteColumn(family.getBytes(), qualifier.getBytes());
+		Delete del = new Delete(Bytes.toBytes(rowKey));
+		del.deleteColumn(Bytes.toBytes(family), Bytes.toBytes(qualifier));
 		list.add(del);
 		table.delete(list); 
 		System.out.println("del recored " + rowKey + " ok.");
@@ -124,7 +124,7 @@ public class HBaseUtil {
 	public Result getOneRecord(String tableName, String rowKey)
 			throws IOException {
 		HTable table = new HTable(conf, tableName);
-		Get get = new Get(rowKey.getBytes());
+		Get get = new Get(Bytes.toBytes(rowKey));
 		Result rs = table.get(get); 
 		return rs;
 	}
